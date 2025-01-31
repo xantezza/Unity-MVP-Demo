@@ -81,9 +81,10 @@ namespace Gameplay.UI.Inventory
                 {
                     BeginDragEvent.Execute(inventoryItemView.Index);
 
-                    if (inventoryItemView.Sprite != null)
+                    if (inventoryItemView.ItemIcon.sprite != null)
                     {
-                        _dragAndDropImage.sprite = inventoryItemView.Sprite;
+                        _dragAndDropImage.sprite = inventoryItemView.ItemIcon.sprite;
+                        inventoryItemView.ItemIcon.enabled = false;
                         _temporalDragAndDropImageRectTransform.anchoredPosition = _mousePosition;
                         _dragAndDropImage.enabled = true;
                     }

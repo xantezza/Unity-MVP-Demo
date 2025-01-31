@@ -40,7 +40,7 @@ namespace Gameplay.UI.Inventory
         {
             if (previousIndex is < 0 or >= INVENTORY_SIZE || newIndex is < 0 or >= INVENTORY_SIZE)
             {
-                _conditionalLoggingService.LogError("Index is out of range.");
+                _conditionalLoggingService.Log("Invalid parameters.");
                 return;
             }
             
@@ -56,7 +56,7 @@ namespace Gameplay.UI.Inventory
         {
             if (currentlyDraggingItemIndex is < 0 or >= INVENTORY_SIZE)
             {
-                _conditionalLoggingService.LogError("Index is out of range.");
+                _conditionalLoggingService.Log("Invalid parameters.");
                 return;
             }
             

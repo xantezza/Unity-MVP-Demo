@@ -63,7 +63,11 @@ namespace Gameplay.UI.Inventory
 
         private void OnDropItemEvent(Unit _)
         {
-            _inventoryModel.DropItem(_currentlyDraggingItemIndex);
+            if (_currentlyDraggingItemIndex is >= 0 and < InventoryModel.INVENTORY_SIZE)
+            {
+                _inventoryModel.DropItem(_currentlyDraggingItemIndex);
+            }
+
             _currentlyDraggingItemIndex = -1;
         }
     }

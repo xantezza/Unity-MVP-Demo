@@ -89,9 +89,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d13372acfe4a28848b3ea6930ac996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemIcon: {fileID: 4597204209835272775}
+  <ItemIcon>k__BackingField: {fileID: 4597204209835272775}
   <Index>k__BackingField: 0
-  <Sprite>k__BackingField: {fileID: 0}
 --- !u!1 &6550792330520030499
 GameObject:
   m_ObjectHideFlags: 0
