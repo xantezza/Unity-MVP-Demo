@@ -36,8 +36,7 @@ namespace Gameplay.UI.Inventory
             _conditionalLoggingService = conditionalLoggingService;
             saveService.Process(this);
         }
-
-        public void AddItem(InventoryItemType type)
+        public bool AddItem(InventoryItemType type)
         {
             for (var index = 0; index < Data.Value.InventoryItemData.Length; index++)
             {
@@ -45,9 +44,12 @@ namespace Gameplay.UI.Inventory
                 {
                     Data.Value.InventoryItemData[index] = new InventoryItemData(type);
                     Data.SetValueAndForceNotify(Data.Value);
-                    break;
+                    return true;
                 }
             }
+
+            _conditionalLoggingService.Log("Inventory is full!");
+            return false;
         }
         
         public void SwitchItems(int previousIndex, int newIndex)
