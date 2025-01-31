@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using Gameplay.Factories;
 using Infrastructure.Providers.AssetReferenceProvider;
 using JetBrains.Annotations;
 using UniRx;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace Gameplay.UI.Inventory
 {
@@ -14,7 +11,7 @@ namespace Gameplay.UI.Inventory
     {
         private readonly IAssetReferenceProvider _assetReferenceProvider;
         private readonly InventoryModel _inventoryModel;
-        private readonly CompositeDisposable _disposables = new CompositeDisposable();
+        private readonly CompositeDisposable _disposables = new();
 
         private IDisposable _modelDataUpdateSubscription;
         private InventoryView _inventoryView;
