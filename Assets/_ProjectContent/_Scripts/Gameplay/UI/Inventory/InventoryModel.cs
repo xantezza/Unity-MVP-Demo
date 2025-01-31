@@ -5,11 +5,10 @@ using UniRx;
 
 namespace Gameplay.UI.Inventory
 {
-    public class InventoryModel : IDataSaveable<InventoryData>
+    public class InventoryModel : IDataSaveable<InventoryData>, IInventoryModel
     {
-        public const int INVENTORY_SIZE = 40;
 
-        public readonly ReactiveProperty<InventoryData> Data = new();
+        public ReactiveProperty<InventoryData> Data { get; } = new();
         private readonly InventoryItemData EmptyCell = new(InventoryItemType.None);
         private readonly IConditionalLoggingService _conditionalLoggingService;
 
@@ -22,7 +21,7 @@ namespace Gameplay.UI.Inventory
         {
             get => Data.Value ??= new InventoryData
             {
-                InventoryItemData = Enumerable.Repeat(EmptyCell, INVENTORY_SIZE).ToArray()
+                InventoryItemData = Enumerable.Repeat(EmptyCell, IInventoryModel.INVENTORY_SIZE).ToArray()
             };
             set
             {
@@ -54,7 +53,7 @@ namespace Gameplay.UI.Inventory
         
         public void SwitchItems(int previousIndex, int newIndex)
         {
-            if (previousIndex is < 0 or >= INVENTORY_SIZE || newIndex is < 0 or >= INVENTORY_SIZE)
+            if (previousIndex is < 0 or >= IInventoryModel.INVENTORY_SIZE || newIndex is < 0 or >= IInventoryModel.INVENTORY_SIZE)
             {
                 _conditionalLoggingService.Log("Invalid parameters.");
                 return;
@@ -70,7 +69,7 @@ namespace Gameplay.UI.Inventory
 
         public void DropItem(int currentlyDraggingItemIndex)
         {
-            if (currentlyDraggingItemIndex is < 0 or >= INVENTORY_SIZE)
+            if (currentlyDraggingItemIndex is < 0 or >= IInventoryModel.INVENTORY_SIZE)
             {
                 _conditionalLoggingService.Log("Invalid parameters.");
                 return;

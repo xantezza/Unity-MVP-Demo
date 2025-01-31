@@ -8,7 +8,7 @@ namespace Gameplay.Factories
 {
     public interface IGameplayModelsFactory
     {
-        InventoryModel InventoryModel { get; }
+        IInventoryModel InventoryModel { get; }
     }
 
     [UsedImplicitly]
@@ -18,7 +18,7 @@ namespace Gameplay.Factories
         private ISaveService _saveService;
         private IConditionalLoggingService _conditionalLoggingService;
 
-        public InventoryModel InventoryModel => _inventoryModel ??= new InventoryModel(_saveService, _conditionalLoggingService);
+        public IInventoryModel InventoryModel => _inventoryModel ??= new InventoryModel(_saveService, _conditionalLoggingService);
         
         [Inject]
         private void Inject(ISaveService saveService, IConditionalLoggingService conditionalLoggingService)

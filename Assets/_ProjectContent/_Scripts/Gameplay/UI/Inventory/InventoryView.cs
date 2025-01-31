@@ -41,15 +41,20 @@ namespace Gameplay.UI.Inventory
             _addItemDropDown.onValueChanged.AddListener(OnAddItemDropDownValueChanged);
         }
 
+        private void OnDestroy()
+        {
+            _addItemDropDown.onValueChanged.RemoveListener(OnAddItemDropDownValueChanged);
+        }
+
         private void OnValidate()
         {
             InventoryItemViews = GetComponentsInChildren<InventoryItemView>(true);
-            Assert.True(InventoryItemViews.Length == InventoryModel.INVENTORY_SIZE);
+            Assert.True(InventoryItemViews.Length == IInventoryModel.INVENTORY_SIZE);
         }
 
         public void UpdateInventoryView(InventoryItemData[] inventoryItemData)
         {
-            for (var i = 0; i < InventoryModel.INVENTORY_SIZE; i++)
+            for (var i = 0; i < IInventoryModel.INVENTORY_SIZE; i++)
             {
                 InventoryItemType type = inventoryItemData[i].Type;
                 InventoryItemViews[i].SetItem(_inventoryItemIconsConfig.ItemIcons[type], type, i);

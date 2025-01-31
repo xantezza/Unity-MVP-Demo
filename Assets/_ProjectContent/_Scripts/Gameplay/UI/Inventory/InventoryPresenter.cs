@@ -12,7 +12,7 @@ namespace Gameplay.UI.Inventory
     public class InventoryPresenter : IDisposable
     {
         private readonly IAssetReferenceProvider _assetReferenceProvider;
-        private readonly InventoryModel _inventoryModel;
+        private readonly IInventoryModel _inventoryModel;
         private readonly CompositeDisposable _disposables = new();
 
         private IDisposable _modelDataUpdateSubscription;
@@ -74,7 +74,7 @@ namespace Gameplay.UI.Inventory
 
         private void OnDropItemEvent(Unit _)
         {
-            if (_currentlyDraggingItemIndex is >= 0 and < InventoryModel.INVENTORY_SIZE)
+            if (_currentlyDraggingItemIndex is >= 0 and < IInventoryModel.INVENTORY_SIZE)
             {
                 _inventoryModel.DropItem(_currentlyDraggingItemIndex);
             }
