@@ -12,7 +12,6 @@ namespace Gameplay.UI.Inventory
         private readonly InventoryItemData EmptyCell = new(InventoryItemType.None);
         private readonly IConditionalLoggingService _conditionalLoggingService;
 
-        private float _multipliedTime;
         private InventoryItemData _itemBuffer;
 
         public SaveKey SaveId => SaveKey.Inventory;
