@@ -1,7 +1,6 @@
 ﻿using Infrastructure.Services.Analytics;
 using Infrastructure.Services.CoroutineRunner;
 using Infrastructure.Services.Logging;
-using Infrastructure.Services.OnGUIService;
 using Infrastructure.Services.Saving;
 using Infrastructure.Services.SceneLoading;
 using Zenject;
@@ -13,7 +12,6 @@ namespace Infrastructure.Installers
         public override void InstallBindings()
         {
             BindConditionalLoggingService();
-            BindDevGUIService();
             BindCoroutineRunnerService();
             BindSceneLoaderService();
             BindAnalyticsLogService();
@@ -25,12 +23,6 @@ namespace Infrastructure.Installers
             // Fake Interface
             Container.Bind<IConditionalLoggingService>().To<UnityConditionalLoggingService>().FromNew().AsSingle().NonLazy();
         }
-
-        private void BindDevGUIService()
-        {
-            Container.BindInterfacesTo<OnGUIService>().FromNewComponentOnNewGameObject().AsSingle().NonLazy();
-        }
-
         private void BindAnalyticsLogService()
         {
             Container.BindInterfacesTo<UnityAnalyticsService>().FromNew().AsSingle().NonLazy();
