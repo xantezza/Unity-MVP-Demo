@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3980121231820533751}
   - component: {fileID: 2974791383429889072}
   - component: {fileID: -6452476774591857368}
+  - component: {fileID: 6132259862669313332}
   m_Layer: 0
   m_Name: InventoryItemView
   m_TagString: Untagged
@@ -91,6 +92,90 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ItemIcon>k__BackingField: {fileID: 4597204209835272775}
   <Index>k__BackingField: 0
+--- !u!114 &6132259862669313332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3179959676573972181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 354ee43692cb4333835196969aef4b09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hasEnableAnimation: 0
+  _enableAnimation:
+    <HasTextAnimation>k__BackingField: 0
+    _textLabel: {fileID: 0}
+    _textFillColor: {r: 1, g: 1, b: 1, a: 1}
+    _textFontSizeDelta: 1
+    _textCharacterSpacing: 12
+    _textAnimationDuration: 0.2
+    _textAnimationEase: 2
+    HasRectTransformAnimation: 0
+    _rectTransform: {fileID: 0}
+    _rectTransformTargetNewScale: {x: 0.9, y: 0.9, z: 0.9}
+    _rectTransformAnimationDuration: 0.2
+    _rectTransformAnimationEase: 2
+    <HasFillImageAnimation>k__BackingField: 0
+    _fillImage: {fileID: 0}
+    _fillImageColor: {r: 1, g: 1, b: 1, a: 1}
+    _fillImageAnimationDuration: 0.2
+    _fillImageAnimationEase: 2
+    <HasHoverImageAnimation>k__BackingField: 0
+    _hoverImage: {fileID: 0}
+    _hoverImageFillColor: {r: 1, g: 1, b: 1, a: 1}
+    _hoverImageAnimationDuration: 0.2
+    _hoverImageAnimationEase: 2
+  _hasOnHoverAnimation: 1
+  _onHoverAnimation:
+    <HasTextAnimation>k__BackingField: 0
+    _textLabel: {fileID: 0}
+    _textFillColor: {r: 1, g: 1, b: 1, a: 1}
+    _textFontSizeDelta: 1
+    _textCharacterSpacing: 12
+    _textAnimationDuration: 0.2
+    _textAnimationEase: 2
+    HasRectTransformAnimation: 0
+    _rectTransform: {fileID: 0}
+    _rectTransformTargetNewScale: {x: 0.9, y: 0.9, z: 0.9}
+    _rectTransformAnimationDuration: 0.2
+    _rectTransformAnimationEase: 2
+    <HasFillImageAnimation>k__BackingField: 0
+    _fillImage: {fileID: 2974791383429889072}
+    _fillImageColor: {r: 0.12, g: 0.12, b: 0.12, a: 1}
+    _fillImageAnimationDuration: 0.2
+    _fillImageAnimationEase: 2
+    <HasHoverImageAnimation>k__BackingField: 1
+    _hoverImage: {fileID: 2974791383429889072}
+    _hoverImageFillColor: {r: 0.12, g: 0.12, b: 0.12, a: 1}
+    _hoverImageAnimationDuration: 0.2
+    _hoverImageAnimationEase: 2
+  _hasOnClickAnimation: 1
+  _onClickAnimation:
+    <HasTextAnimation>k__BackingField: 0
+    _textLabel: {fileID: 0}
+    _textFillColor: {r: 1, g: 1, b: 1, a: 1}
+    _textFontSizeDelta: 1
+    _textCharacterSpacing: 12
+    _textAnimationDuration: 0.2
+    _textAnimationEase: 2
+    HasRectTransformAnimation: 0
+    _rectTransform: {fileID: 0}
+    _rectTransformTargetNewScale: {x: 0.9, y: 0.9, z: 0.9}
+    _rectTransformAnimationDuration: 0.2
+    _rectTransformAnimationEase: 2
+    <HasFillImageAnimation>k__BackingField: 0
+    _fillImage: {fileID: 2974791383429889072}
+    _fillImageColor: {r: 0.08, g: 0.08, b: 0.08, a: 1}
+    _fillImageAnimationDuration: 0.2
+    _fillImageAnimationEase: 2
+    <HasHoverImageAnimation>k__BackingField: 1
+    _hoverImage: {fileID: 2974791383429889072}
+    _hoverImageFillColor: {r: 0.07, g: 0.07, b: 0.07, a: 1}
+    _hoverImageAnimationDuration: 0.2
+    _hoverImageAnimationEase: 2
 --- !u!1 &6550792330520030499
 GameObject:
   m_ObjectHideFlags: 0
