@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using Gameplay.Factories;
 using Infrastructure.Providers.AssetReferenceProvider;
 using JetBrains.Annotations;
+using TMPro;
 using UniRx;
 
 namespace Gameplay.UI.Inventory
@@ -35,16 +37,23 @@ namespace Gameplay.UI.Inventory
         {
             var viewGameObject = await _assetReferenceProvider.InventoryViewAssetReference.InstantiateAsync().Task;
             _inventoryView = viewGameObject.GetComponent<InventoryView>();
-
+            
+            _inventoryView.InitializeInventoryAddItemDropdown(
+                Enum.GetNames(typeof(InventoryItemType))
+                    .Select(x => new TMP_Dropdown.OptionData(x))
+                    .ToList()
+            );
+            
             _disposables.Add(_inventoryView.BeginDragEvent.Subscribe(OnBeginDragEvent));
             _disposables.Add(_inventoryView.EndDragEvent.Subscribe(OnEndDragEvent));
+            _disposables.Add(_inventoryView.OnAddItemDropDown.Subscribe(OnAddItemDropdown));
             _disposables.Add(_inventoryView.DropItemEvent.Subscribe(OnDropItemEvent));
             _disposables.Add(_inventoryModel.Data.Subscribe(ModelDataUpdated));
         }
 
         private void ModelDataUpdated(InventoryData inventoryData)
         {
-            _inventoryView.UpdateInventoryView(inventoryData);
+            _inventoryView.UpdateInventoryView(inventoryData.InventoryItemData);
         }
 
         private void OnBeginDragEvent(int itemIndex)
@@ -56,6 +65,11 @@ namespace Gameplay.UI.Inventory
         {
             _inventoryModel.SwitchItems(_currentlyDraggingItemIndex, itemIndex);
             _currentlyDraggingItemIndex = -1;
+        }
+        
+        private void OnAddItemDropdown(InventoryItemType type)
+        {
+            _inventoryModel.AddItem(type);
         }
 
         private void OnDropItemEvent(Unit _)

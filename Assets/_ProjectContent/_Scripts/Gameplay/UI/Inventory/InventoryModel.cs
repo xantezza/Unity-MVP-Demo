@@ -8,12 +8,13 @@ namespace Gameplay.UI.Inventory
     public class InventoryModel : IDataSaveable<InventoryData>
     {
         public const int INVENTORY_SIZE = 40;
-        private readonly InventoryItemData EmptyCell = new(InventoryItemType.None);
 
         public readonly ReactiveProperty<InventoryData> Data = new();
+        private readonly InventoryItemData EmptyCell = new(InventoryItemType.None);
+        private readonly IConditionalLoggingService _conditionalLoggingService;
+
         private float _multipliedTime;
         private InventoryItemData _itemBuffer;
-        private IConditionalLoggingService _conditionalLoggingService;
 
         public SaveKey SaveId => SaveKey.Inventory;
 
@@ -36,6 +37,19 @@ namespace Gameplay.UI.Inventory
             saveService.Process(this);
         }
 
+        public void AddItem(InventoryItemType type)
+        {
+            for (var index = 0; index < Data.Value.InventoryItemData.Length; index++)
+            {
+                if (Data.Value.InventoryItemData[index].Type == InventoryItemType.None)
+                {
+                    Data.Value.InventoryItemData[index] = new InventoryItemData(type);
+                    Data.SetValueAndForceNotify(Data.Value);
+                    break;
+                }
+            }
+        }
+        
         public void SwitchItems(int previousIndex, int newIndex)
         {
             if (previousIndex is < 0 or >= INVENTORY_SIZE || newIndex is < 0 or >= INVENTORY_SIZE)

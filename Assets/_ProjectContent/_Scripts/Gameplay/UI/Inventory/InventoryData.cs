@@ -5,7 +5,7 @@ namespace Gameplay.UI.Inventory
 {
     public enum InventoryItemType
     {
-        None = -1,
+        None = 0,
         Apple = 1,
         Axe = 2,
         Bracers = 3,

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ItemIcons>k__BackingField:
     _serializedList:
-    - Key: -1
+    - Key: 0
       Value: {fileID: 0}
     - Key: 1
       Value: {fileID: 21300000, guid: 5d9ba4e7d0964044ea54abe409d81dfd, type: 3}

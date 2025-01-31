@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Configs.Gameplay.UI;
 using NUnit.Framework;
+using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -13,10 +14,12 @@ namespace Gameplay.UI.Inventory
     {
         public readonly ReactiveCommand<int> BeginDragEvent = new();
         public readonly ReactiveCommand<int> EndDragEvent = new();
+        public readonly ReactiveCommand<InventoryItemType> OnAddItemDropDown = new();
         public readonly ReactiveCommand DropItemEvent = new();
 
         [field: HideInInspector] [field: SerializeField] public InventoryItemView[] InventoryItemViews { get; private set; }
         [SerializeField] private Image _dragAndDropImage;
+        [SerializeField] private TMP_Dropdown _addItemDropDown;
         [SerializeField] private GraphicRaycaster _graphicRaycaster;
 
         private readonly List<RaycastResult> _results = new();
@@ -35,6 +38,7 @@ namespace Gameplay.UI.Inventory
         {
             _pointerEventData = new PointerEventData(EventSystem.current);
             _temporalDragAndDropImageRectTransform = _dragAndDropImage.GetComponent<RectTransform>();
+            _addItemDropDown.onValueChanged.AddListener(OnAddItemDropDownValueChanged);
         }
 
         private void OnValidate()
@@ -43,19 +47,29 @@ namespace Gameplay.UI.Inventory
             Assert.True(InventoryItemViews.Length == InventoryModel.INVENTORY_SIZE);
         }
 
-        public void UpdateInventoryView(InventoryData inventoryData)
+        public void UpdateInventoryView(InventoryItemData[] inventoryItemData)
         {
             for (var i = 0; i < InventoryModel.INVENTORY_SIZE; i++)
             {
-                InventoryItemType type = inventoryData.InventoryItemData[i].Type;
+                InventoryItemType type = inventoryItemData[i].Type;
                 InventoryItemViews[i].SetItem(_inventoryItemIconsConfig.ItemIcons[type], type, i);
             }
+        }
+
+        public void InitializeInventoryAddItemDropdown(List<TMP_Dropdown.OptionData> options)
+        {
+            _addItemDropDown.options = options;
+        }
+        
+        private void OnAddItemDropDownValueChanged(int itemTypeID)
+        {
+            InventoryItemType itemType = (InventoryItemType) itemTypeID;
+            OnAddItemDropDown.Execute(itemType);
         }
 
         private void Update()
         {
             _mousePosition = Input.mousePosition;
-            _pointerEventData.position = _mousePosition;
 
             if (_dragAndDropImage.enabled)
             {
@@ -71,6 +85,7 @@ namespace Gameplay.UI.Inventory
         private void ProcessDragAndDrop()
         {
             _results.Clear();
+            _pointerEventData.position = _mousePosition;
             _graphicRaycaster.Raycast(_pointerEventData, _results);
 
             if (_results.Count <= 0) return;
@@ -83,8 +98,8 @@ namespace Gameplay.UI.Inventory
 
                     if (inventoryItemView.Sprite != null)
                     {
-                        _dragAndDropImage.sprite = inventoryItemView.Sprite;
                         inventoryItemView.Hide();
+                        _dragAndDropImage.sprite = inventoryItemView.Sprite;
                         _temporalDragAndDropImageRectTransform.anchoredPosition = _mousePosition;
                         _dragAndDropImage.enabled = true;
                     }
