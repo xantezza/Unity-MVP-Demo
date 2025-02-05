@@ -7,13 +7,12 @@ namespace Gameplay.UI.Inventory
 {
     public class InventoryModel : IDataSaveable<InventoryData>, IInventoryModel
     {
-
-        public ReactiveProperty<InventoryData> Data { get; } = new();
         private readonly InventoryItemData EmptyCell = new(InventoryItemType.None);
         private readonly IConditionalLoggingService _conditionalLoggingService;
 
         private InventoryItemData _itemBuffer;
 
+        public ReactiveProperty<InventoryData> Data { get; } = new();
         public SaveKey SaveId => SaveKey.Inventory;
 
         public InventoryData SaveData

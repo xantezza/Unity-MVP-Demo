@@ -15,9 +15,7 @@ namespace Gameplay.UI.Inventory
         private readonly IInventoryModel _inventoryModel;
         private readonly CompositeDisposable _disposables = new();
 
-        private IDisposable _modelDataUpdateSubscription;
         private InventoryView _inventoryView;
-
         private int _currentlyDraggingItemIndex = -1;
 
         public InventoryPresenter(IGameplayModelsFactory gameplayModelsFactory, IAssetReferenceProvider assetReferenceProvider)
@@ -48,6 +46,7 @@ namespace Gameplay.UI.Inventory
             _disposables.Add(_inventoryView.EndDragEvent.Subscribe(OnEndDragEvent));
             _disposables.Add(_inventoryView.OnAddItemDropDown.Subscribe(OnAddItemDropdown));
             _disposables.Add(_inventoryView.DropItemEvent.Subscribe(OnDropItemEvent));
+            
             _disposables.Add(_inventoryModel.Data.Subscribe(ModelDataUpdated));
         }
 

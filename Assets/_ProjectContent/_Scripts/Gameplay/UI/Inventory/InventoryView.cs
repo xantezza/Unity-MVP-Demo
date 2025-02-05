@@ -17,7 +17,7 @@ namespace Gameplay.UI.Inventory
         public readonly ReactiveCommand<InventoryItemType> OnAddItemDropDown = new();
         public readonly ReactiveCommand DropItemEvent = new();
 
-        [field: HideInInspector] [field: SerializeField] public InventoryItemView[] InventoryItemViews { get; private set; }
+        [HideInInspector] [SerializeField] private InventoryItemView[] InventoryItemViews;
         [SerializeField] private Image _dragAndDropImage;
         [SerializeField] private TMP_Dropdown _addItemDropDown;
         [SerializeField] private GraphicRaycaster _graphicRaycaster;
@@ -68,8 +68,7 @@ namespace Gameplay.UI.Inventory
         
         private void OnAddItemDropDownValueChanged(int itemTypeID)
         {
-            InventoryItemType itemType = (InventoryItemType) itemTypeID;
-            OnAddItemDropDown.Execute(itemType);
+            OnAddItemDropDown.Execute((InventoryItemType) itemTypeID);
         }
 
         private void Update()
