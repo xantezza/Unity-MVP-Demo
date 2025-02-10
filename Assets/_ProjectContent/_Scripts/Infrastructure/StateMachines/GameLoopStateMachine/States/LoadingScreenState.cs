@@ -85,7 +85,7 @@ namespace Infrastructure.StateMachines.GameLoopStateMachine.States
 
         private void OnRemoteInitializeAny()
         {
-            _infrastructureConfig = RemoteConfig.InfrastructureConfig;
+            _infrastructureConfig = RemoteConfig.Infrastructure;
         }
     }
 }

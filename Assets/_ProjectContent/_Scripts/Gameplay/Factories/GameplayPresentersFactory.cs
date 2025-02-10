@@ -19,10 +19,10 @@ namespace Gameplay.Factories
         private InventoryPresenter CreateNewPlayerInventory(IAssetReferenceProvider assetReferenceProvider, IGameplayModelsFactory gameplayModelsFactory)
         {
             return new InventoryPresenter(
-                RemoteConfig.InfrastructureConfig.PlayerInventorySize,
+                RemoteConfig.Gameplay.PlayerInventorySize,
                 assetReferenceProvider.PlayerInventoryViewAssetReference,
                 gameplayModelsFactory.CreateNewInventoryModel(
-                    RemoteConfig.InfrastructureConfig.PlayerInventorySize
+                    RemoteConfig.Gameplay.PlayerInventorySize
                 )
             );
         }
