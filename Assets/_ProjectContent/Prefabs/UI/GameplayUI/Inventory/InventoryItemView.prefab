@@ -35,10 +35,10 @@ RectTransform:
   - {fileID: 7911532033486535797}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3980121231820533751
 CanvasRenderer:
@@ -63,7 +63,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.15, g: 0.15, b: 0.15, a: 1}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: -2.5, y: -2.5, z: -2.5, w: -2.5}
+  m_RaycastPadding: {x: -5, y: -5, z: -5, w: -5}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -90,8 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d13372acfe4a28848b3ea6930ac996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ItemIcon>k__BackingField: {fileID: 4597204209835272775}
-  <Index>k__BackingField: 0
+  ItemIcon: {fileID: 4597204209835272775}
 --- !u!114 &6132259862669313332
 MonoBehaviour:
   m_ObjectHideFlags: 0

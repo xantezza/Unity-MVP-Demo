@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using Configs.Gameplay.UI;
-using NUnit.Framework;
 using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Utils.Extensions;
 using Zenject;
 
 namespace Gameplay.UI.Inventory
@@ -17,16 +17,20 @@ namespace Gameplay.UI.Inventory
         public readonly ReactiveCommand<InventoryItemType> OnAddItemDropDown = new();
         public readonly ReactiveCommand DropItemEvent = new();
 
-        [HideInInspector] [SerializeField] private InventoryItemView[] InventoryItemViews;
+        private readonly List<RaycastResult> _results = new();
+        private readonly List<InventoryItemView> _instantiatedInventoryItemViews = new();
+
         [SerializeField] private Image _dragAndDropImage;
         [SerializeField] private TMP_Dropdown _addItemDropDown;
         [SerializeField] private GraphicRaycaster _graphicRaycaster;
+        [SerializeField] private InventoryItemView _inventoryItemViewPrefab;
+        [SerializeField] private RectTransform _inventoryItemViewContentRoot;
 
-        private readonly List<RaycastResult> _results = new();
         private RectTransform _temporalDragAndDropImageRectTransform;
         private IInventoryItemIconsConfig _inventoryItemIconsConfig;
         private PointerEventData _pointerEventData;
         private Vector2 _mousePosition;
+        private int _inventorySize;
 
         [Inject]
         private void Inject(IInventoryItemIconsConfig inventoryItemIconsConfig)
@@ -46,18 +50,34 @@ namespace Gameplay.UI.Inventory
             _addItemDropDown.onValueChanged.RemoveListener(OnAddItemDropDownValueChanged);
         }
 
-        private void OnValidate()
+        public void SetInventorySize(int newInventorySize)
         {
-            InventoryItemViews = GetComponentsInChildren<InventoryItemView>(true);
-            Assert.True(InventoryItemViews.Length == IInventoryModel.INVENTORY_SIZE);
+            if (newInventorySize > _inventorySize)
+            {
+                for (int i = 0; i < newInventorySize - _inventorySize; i++)
+                {
+                    _instantiatedInventoryItemViews.Add(Instantiate(_inventoryItemViewPrefab, _inventoryItemViewContentRoot));
+                }
+            }
+
+            if (newInventorySize < _inventorySize)
+            {
+                for (int i = 0; i < _inventorySize - newInventorySize; i++)
+                {
+                    Destroy(_instantiatedInventoryItemViews.FastLast());
+                    _instantiatedInventoryItemViews.RemoveAt(_instantiatedInventoryItemViews.Count - 1);
+                }
+            }
+            
+            _inventorySize = newInventorySize;
         }
 
         public void UpdateInventoryView(InventoryItemData[] inventoryItemData)
         {
-            for (var i = 0; i < IInventoryModel.INVENTORY_SIZE; i++)
+            for (var i = 0; i < _inventorySize; i++)
             {
                 InventoryItemType type = inventoryItemData[i].Type;
-                InventoryItemViews[i].SetItem(_inventoryItemIconsConfig.ItemIcons[type], type, i);
+                _instantiatedInventoryItemViews[i].SetItem(_inventoryItemIconsConfig.ItemIcons[type], type, i);
             }
         }
 
@@ -65,7 +85,7 @@ namespace Gameplay.UI.Inventory
         {
             _addItemDropDown.options = options;
         }
-        
+
         private void OnAddItemDropDownValueChanged(int itemTypeID)
         {
             OnAddItemDropDown.Execute((InventoryItemType) itemTypeID);
@@ -73,22 +93,21 @@ namespace Gameplay.UI.Inventory
 
         private void Update()
         {
-            _mousePosition = Input.mousePosition;
-
-            if (_dragAndDropImage.enabled)
-            {
-                _temporalDragAndDropImageRectTransform.anchoredPosition = _mousePosition;
-            }
-
             if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonUp(0))
             {
                 ProcessDragAndDrop();
+            }
+            
+            if (_dragAndDropImage.enabled)
+            {
+                _temporalDragAndDropImageRectTransform.anchoredPosition = Input.mousePosition;
             }
         }
 
         private void ProcessDragAndDrop()
         {
             _results.Clear();
+            _mousePosition = Input.mousePosition;
             _pointerEventData.position = _mousePosition;
             _graphicRaycaster.Raycast(_pointerEventData, _results);
 

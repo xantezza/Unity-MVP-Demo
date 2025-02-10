@@ -9,6 +9,7 @@ namespace Gameplay.UI.Inventory
     {
         private readonly InventoryItemData EmptyCell = new(InventoryItemType.None);
         private readonly IConditionalLoggingService _conditionalLoggingService;
+        private readonly int _defaultInventorySize = 0;
 
         private InventoryItemData _itemBuffer;
 
@@ -19,7 +20,8 @@ namespace Gameplay.UI.Inventory
         {
             get => Data.Value ??= new InventoryData
             {
-                InventoryItemData = Enumerable.Repeat(EmptyCell, IInventoryModel.INVENTORY_SIZE).ToArray()
+                InventoryItemData = Enumerable.Repeat(EmptyCell, _defaultInventorySize).ToArray(),
+                InventorySize = _defaultInventorySize
             };
             set
             {
@@ -28,11 +30,28 @@ namespace Gameplay.UI.Inventory
             }
         }
 
-        public InventoryModel(ISaveService saveService, IConditionalLoggingService conditionalLoggingService)
+        public InventoryModel(int inventorySize, ISaveService saveService, IConditionalLoggingService conditionalLoggingService)
         {
+            _defaultInventorySize = inventorySize;
             _conditionalLoggingService = conditionalLoggingService;
             saveService.Process(this);
         }
+
+        public void SetInventorySize(int inventorySize)
+        {
+            if (Data.Value.InventorySize != 0) return;
+            
+            Data.Value.InventorySize = inventorySize;
+
+            if (Data.Value.InventoryItemData.Length == _defaultInventorySize)
+            {
+                Data.Value = new InventoryData
+                {
+                    InventoryItemData = Enumerable.Repeat(EmptyCell, Data.Value.InventorySize).ToArray()
+                };
+            }
+        }
+
         public bool AddItem(InventoryItemType type)
         {
             for (var index = 0; index < Data.Value.InventoryItemData.Length; index++)
@@ -48,15 +67,15 @@ namespace Gameplay.UI.Inventory
             _conditionalLoggingService.Log("Inventory is full!");
             return false;
         }
-        
+
         public void SwitchItems(int previousIndex, int newIndex)
         {
-            if (previousIndex is < 0 or >= IInventoryModel.INVENTORY_SIZE || newIndex is < 0 or >= IInventoryModel.INVENTORY_SIZE)
+            if (previousIndex < 0 || previousIndex >= SaveData.InventorySize || newIndex < 0 || newIndex >= SaveData.InventorySize)
             {
                 _conditionalLoggingService.Log("Invalid parameters.");
                 return;
             }
-            
+
             _itemBuffer = Data.Value.InventoryItemData[newIndex];
             Data.Value.InventoryItemData[newIndex] = Data.Value.InventoryItemData[previousIndex];
             Data.Value.InventoryItemData[previousIndex] = _itemBuffer;
@@ -67,12 +86,12 @@ namespace Gameplay.UI.Inventory
 
         public void DropItem(int currentlyDraggingItemIndex)
         {
-            if (currentlyDraggingItemIndex is < 0 or >= IInventoryModel.INVENTORY_SIZE)
+            if (currentlyDraggingItemIndex < 0 || currentlyDraggingItemIndex >= SaveData.InventorySize)
             {
                 _conditionalLoggingService.Log("Invalid parameters.");
                 return;
             }
-            
+
             Data.Value.InventoryItemData[currentlyDraggingItemIndex] = EmptyCell;
             Data.SetValueAndForceNotify(Data.Value);
         }

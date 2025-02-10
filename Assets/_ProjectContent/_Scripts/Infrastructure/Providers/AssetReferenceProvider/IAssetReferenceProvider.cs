@@ -6,7 +6,7 @@ namespace Infrastructure.Providers.AssetReferenceProvider
     {
         ModalsAssetReferences ModalsAssetReferences { get; }
         AssetReferenceGameObject DebugRootAssetReference { get; }
-        AssetReferenceGameObject InventoryViewAssetReference { get; }
+        AssetReferenceGameObject PlayerInventoryViewAssetReference { get; }
         AssetReference LoadingScene { get; }
         AssetReference MenuScene { get; }
         AssetReference GamePlayScene { get; }

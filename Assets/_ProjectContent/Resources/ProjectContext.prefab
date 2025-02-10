@@ -284,7 +284,7 @@ MonoBehaviour:
       m_SubObjectGUID: 
       m_SubObjectType: 
       m_EditorAssetChanged: 0
-    <InventoryViewAssetReference>k__BackingField:
+    <PlayerInventoryViewAssetReference>k__BackingField:
       m_AssetGUID: e9bc0abc060168644b810631a8ad9d26
       m_SubObjectName: 
       m_SubObjectGUID: 
@@ -443,8 +443,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d890d1e5e5134e00a06b8edc6adb4794, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lastFetchDate: 30.01.2025 23:13:56
-  _currentDate: 30.01.2025 23:14:00
+  _lastFetchDate: 10.02.2025 22:08:44
+  _currentDate: 10.02.2025 22:08:47
   _minutesFromLastFetch: 0
   _cachedConfigString: "{\r\n  \"infrastructure_config\": {\r\n    \"FakeTimeBeforeLoad\":
     0,\r\n    \"FakeMinimalLoadTime\": 0.5,\r\n    \"FakeTimeAfterLoad\": 0.5\r\n 

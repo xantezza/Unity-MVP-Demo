@@ -29,6 +29,8 @@ namespace Gameplay.UI.Inventory
     [Serializable]
     public class InventoryData
     {
-        [field: SerializeField] public InventoryItemData[] InventoryItemData;
+        public InventoryItemData[] InventoryItemData;
+        public int InventorySize;
+
     }
 }
