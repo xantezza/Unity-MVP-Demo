@@ -10,9 +10,9 @@ namespace Infrastructure.StateMachines.StateMachine
     {
         private readonly IConditionalLoggingService _conditionalLoggingService;
 
-        private IState _activeState;
+        protected IState _activeState;
         private readonly Dictionary<Type, IState> _states = new();
-        private readonly List<IState> _statesList = new();
+        protected readonly List<IState> _statesList = new();
 
         protected abstract LogTag LogTag { get; }
 
@@ -22,24 +22,7 @@ namespace Infrastructure.StateMachines.StateMachine
             _conditionalLoggingService = conditionalLoggingService;
         }
 
-        public async UniTask NextState()
-        {
-            var indexOfActiveState = -1;
-            if (_activeState != null)
-            {
-                indexOfActiveState = _statesList.IndexOf(_activeState);
-                if (indexOfActiveState == _statesList.Count - 1)
-                {
-                    await _activeState.Exit();
-                    _activeState = null;
-                    return;
-                }
-            }
-
-            await Enter(indexOfActiveState + 1);
-        }
-
-        public async UniTask Enter<TState>() where TState : class, IState, IEnterableState
+        protected async UniTask Enter<TState>() where TState : class, IState, IEnterableState
         {
             var state = await ChangeState<TState>();
 
@@ -48,7 +31,7 @@ namespace Infrastructure.StateMachines.StateMachine
             await state.Enter();
         }
 
-        public async UniTask Enter<TState, TPayload>(TPayload payload) where TState : class, IState, IPayloadedState<TPayload>
+        protected async UniTask Enter<TState, TPayload>(TPayload payload) where TState : class, IState, IPayloadedState<TPayload>
         {
             var state = await ChangeState<TState>();
 
@@ -57,7 +40,7 @@ namespace Infrastructure.StateMachines.StateMachine
             await state.Enter(payload);
         }
 
-        public async UniTask Enter<TState, TPayload, TPayload1>(TPayload payload, TPayload1 payload1) where TState : class, IState, IPayloadedState<TPayload, TPayload1>
+        protected async UniTask Enter<TState, TPayload, TPayload1>(TPayload payload, TPayload1 payload1) where TState : class, IState, IPayloadedState<TPayload, TPayload1>
         {
             var state = await ChangeState<TState>();
 
@@ -65,20 +48,20 @@ namespace Infrastructure.StateMachines.StateMachine
 
             await state.Enter(payload, payload1);
         }
-
-        protected void RegisterState<TState>(TState state) where TState : IState
-        {
-            _states.Add(typeof(TState), state);
-            _statesList.Add(state);
-        }
-
-        private async UniTask Enter(int index)
+        
+        protected async UniTask Enter(int index)
         {
             var state = await ChangeState(index);
 
             _conditionalLoggingService.Log($"Entering state {state.GetType().Name}", LogTag);
 
             if (state is IEnterableState enterableState) await enterableState.Enter();
+        }
+
+        protected void RegisterState<TState>(TState state) where TState : IState
+        {
+            _states.Add(typeof(TState), state);
+            _statesList.Add(state);
         }
 
         private async UniTask<TState> ChangeState<TState>() where TState : class, IState
