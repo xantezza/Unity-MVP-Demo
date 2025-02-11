@@ -15,21 +15,27 @@ namespace Infrastructure.Services.Logging
         [Conditional("DEV")]
         public void Log(string text, LogTag tag = LogTag.Default)
         {
+#if DEV
             if (_tagsToExclude.Contains(tag)) return;
+#endif
             InternalLog(text, tag);
         }
 
         [Conditional("DEV")]
         public void LogWarning(string text, LogTag tag = LogTag.Default)
         {
+#if DEV
             if (_warningTagsToExclude.Contains(tag)) return;
+#endif
             InternalLogWarning(text, tag);
         }
 
         [Conditional("DEV")]
         public void LogError(string text, LogTag tag = LogTag.Default)
         {
+#if DEV
             if (_errorTagsToExclude.Contains(tag)) return;
+#endif
             InternalLogError(text, tag);
         }
 
