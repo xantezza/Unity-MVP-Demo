@@ -35,7 +35,7 @@ namespace Gameplay.UI.Inventory
             var viewGameObject = await inventoryViewReference.InstantiateAsync().Task;
             _inventoryView = viewGameObject.GetComponent<InventoryView>();
             _inventoryView.SetInventorySize(_inventorySize);
-            
+
             _inventoryView.InitializeInventoryAddItemDropdown(
                 Enum.GetNames(typeof(InventoryItemType))
                     .Select(x => new TMP_Dropdown.OptionData(x))

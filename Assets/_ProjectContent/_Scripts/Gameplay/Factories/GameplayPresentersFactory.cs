@@ -2,6 +2,7 @@
 using Configs.RemoteConfig;
 using Gameplay.UI.Inventory;
 using Infrastructure.Providers.AssetReferenceProvider;
+using Infrastructure.Services.Saving;
 using Zenject;
 
 namespace Gameplay.Factories
@@ -22,7 +23,8 @@ namespace Gameplay.Factories
                 RemoteConfig.Gameplay.PlayerInventorySize,
                 assetReferenceProvider.PlayerInventoryViewAssetReference,
                 gameplayModelsFactory.CreateNewInventoryModel(
-                    RemoteConfig.Gameplay.PlayerInventorySize
+                    RemoteConfig.Gameplay.PlayerInventorySize,
+                    SaveKey.PlayerInventory
                 )
             );
         }

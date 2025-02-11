@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using Configs.RemoteConfig;
+using Cysharp.Threading.Tasks;
+using Infrastructure.Providers.LoadingCurtainProvider;
 using Infrastructure.Services.CoroutineRunner;
 using Infrastructure.Services.Logging;
 using JetBrains.Annotations;
@@ -14,20 +17,23 @@ namespace Infrastructure.Services.SceneLoading
     {
         private readonly ICoroutineRunnerService _coroutineRunner;
         private readonly IConditionalLoggingService _conditionalLoggingService;
+        private readonly ILoadingCurtainProvider _loadingCurtainProvider;
         private string _cachedSceneGUID;
 
-        public SceneLoaderService(ICoroutineRunnerService coroutineRunner, IConditionalLoggingService conditionalLoggingService)
+        public SceneLoaderService(ICoroutineRunnerService coroutineRunner, IConditionalLoggingService conditionalLoggingService, ILoadingCurtainProvider loadingCurtainProvider)
         {
+            _loadingCurtainProvider = loadingCurtainProvider;
             _conditionalLoggingService = conditionalLoggingService;
             _coroutineRunner = coroutineRunner;
         }
 
-        public void LoadScene(AssetReference nextSceneName, bool allowReloadSameScene = false, Action onLoaded = null, float minimalLoadTime = 0f, Action<float> onProgressUpdate = null)
+        public UniTask LoadScene(AssetReference nextSceneName, Action onLoaded = null, bool allowReloadSameScene = false)
         {
-            _coroutineRunner.StartCoroutine(LoadSceneByAddressablesCoroutine(nextSceneName, allowReloadSameScene, onLoaded, minimalLoadTime, onProgressUpdate));
+            _coroutineRunner.StartCoroutine(LoadSceneByAddressablesCoroutine(nextSceneName, onLoaded, allowReloadSameScene));
+            return default;
         }
-        
-        private IEnumerator LoadSceneByAddressablesCoroutine(AssetReference nextScene, bool allowReloadSameScene, Action onLoaded, float minimalLoadTime, Action<float> onProgressUpdate)
+
+        private IEnumerator LoadSceneByAddressablesCoroutine(AssetReference nextScene, Action onLoaded, bool allowReloadSameScene)
         {
             if (!allowReloadSameScene && _cachedSceneGUID == nextScene.AssetGUID)
             {
@@ -40,12 +46,14 @@ namespace Infrastructure.Services.SceneLoading
 
             _cachedSceneGUID = nextScene.AssetGUID;
 
+            _loadingCurtainProvider.Show();
+
             var waitNextScene = Addressables.LoadSceneAsync(nextScene, LoadSceneMode.Single, false);
 
-            while (timePassed < minimalLoadTime)
+            while (timePassed < RemoteConfig.Infrastructure.FakeMinimalLoadTime)
             {
                 timePassed += Time.unscaledDeltaTime;
-                onProgressUpdate?.Invoke(waitNextScene.PercentComplete);
+                _loadingCurtainProvider.SetProgress01(waitNextScene.PercentComplete);
                 yield return null;
             }
 
@@ -57,6 +65,8 @@ namespace Infrastructure.Services.SceneLoading
             waitNextScene.Result.ActivateAsync();
             _conditionalLoggingService.Log($"Loaded scene: {waitNextScene.Result.Scene.name} \n{nextScene.AssetGUID}", LogTag.SceneLoader);
             onLoaded?.Invoke();
+            
+            _loadingCurtainProvider.Hide();
         }
     }
 }

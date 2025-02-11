@@ -72,7 +72,7 @@ namespace Gameplay.UI.Inventory
             _inventorySize = newInventorySize;
         }
 
-        public void UpdateInventoryView(InventoryItemData[] inventoryItemData)
+        public void UpdateInventoryView(in InventoryItemData[] inventoryItemData)
         {
             for (var i = 0; i < _inventorySize; i++)
             {
@@ -81,7 +81,7 @@ namespace Gameplay.UI.Inventory
             }
         }
 
-        public void InitializeInventoryAddItemDropdown(List<TMP_Dropdown.OptionData> options)
+        public void InitializeInventoryAddItemDropdown(in List<TMP_Dropdown.OptionData> options)
         {
             _addItemDropDown.options = options;
         }

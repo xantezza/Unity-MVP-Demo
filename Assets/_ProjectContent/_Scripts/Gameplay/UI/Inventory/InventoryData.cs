@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 namespace Gameplay.UI.Inventory
 {
@@ -23,14 +22,14 @@ namespace Gameplay.UI.Inventory
         {
             Type = type;
         }
-        
+
         public readonly InventoryItemType Type;
     }
+
     [Serializable]
     public class InventoryData
     {
         public InventoryItemData[] InventoryItemData;
         public int InventorySize;
-
     }
 }
