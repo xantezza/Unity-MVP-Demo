@@ -39,15 +39,6 @@ namespace Infrastructure.StateMachines.StateMachine
 
             await state.Enter(payload);
         }
-
-        protected async UniTask Enter<TState, TPayload, TPayload1>(TPayload payload, TPayload1 payload1) where TState : class, IState, IPayloadedState<TPayload, TPayload1>
-        {
-            var state = await ChangeState<TState>();
-
-            _conditionalLoggingService.Log($"Entering state {typeof(TState).Name} with payload: \n{typeof(TPayload).Name}: {payload} \n{typeof(TPayload1).Name}: {payload1}", LogTag);
-
-            await state.Enter(payload, payload1);
-        }
         
         protected async UniTask Enter(int index)
         {
