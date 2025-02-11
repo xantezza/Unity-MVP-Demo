@@ -7,7 +7,6 @@ using JetBrains.Annotations;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
-using UnityEngine.SceneManagement;
 
 namespace Infrastructure.Services.SceneLoading
 {
@@ -37,9 +36,9 @@ namespace Infrastructure.Services.SceneLoading
                 onLoaded?.Invoke();
                 return;
             }
-            
+
             await _loadingCurtainProvider.Show();
-            AsyncOperationHandle<SceneInstance> waitNextScene = Addressables.LoadSceneAsync(nextScene, LoadSceneMode.Single, false);
+            AsyncOperationHandle<SceneInstance> waitNextScene = Addressables.LoadSceneAsync(nextScene);
             
             while (!waitNextScene.IsDone)
             {
@@ -47,10 +46,9 @@ namespace Infrastructure.Services.SceneLoading
 
                 await UniTask.Yield();
             }
-
+            
             _conditionalLoggingService.Log($"Loaded scene: {waitNextScene.Result.Scene.name} \n{nextScene.AssetGUID}", LogTag.SceneLoader);
-            SceneInstance scene = await waitNextScene;
-            await scene.ActivateAsync();
+
             onLoaded?.Invoke();
             await UniTask.WaitForSeconds(RemoteConfig.Infrastructure.FakeMinimalLoadTime);
             _loadingCurtainProvider.Hide();
