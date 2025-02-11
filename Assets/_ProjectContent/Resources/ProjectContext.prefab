@@ -280,7 +280,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 90
+  m_SortingOrder: 200
   m_TargetDisplay: 0
 --- !u!114 &5435853238325340922
 MonoBehaviour:
@@ -354,8 +354,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4895855354268550096}
-  - {fileID: 209004101722861648}
   - {fileID: 7538335589412189997}
+  - {fileID: 209004101722861648}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6618613213814882690
@@ -545,7 +545,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 32767
+  m_SortingOrder: 100
   m_TargetDisplay: 0
 --- !u!114 &6683704036321270356
 MonoBehaviour:
@@ -988,8 +988,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d890d1e5e5134e00a06b8edc6adb4794, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lastFetchDate: 11.02.2025 3:51:53
-  _currentDate: 11.02.2025 3:52:40
+  _lastFetchDate: 12.02.2025 1:02:48
+  _currentDate: 12.02.2025 1:03:01
   _minutesFromLastFetch: 0
   _cachedConfigString: "{\r\n  \"infrastructure_config\": {\r\n    \"FakeTimeBeforeLoad\":
     0,\r\n    \"FakeMinimalLoadTime\": 0.5,\r\n    \"FakeTimeAfterLoad\": 0.5\r\n 
