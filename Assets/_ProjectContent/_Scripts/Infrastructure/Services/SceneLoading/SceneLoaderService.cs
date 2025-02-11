@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections;
 using Configs.RemoteConfig;
 using Cysharp.Threading.Tasks;
 using Infrastructure.Providers.LoadingCurtainProvider;
-using Infrastructure.Services.CoroutineRunner;
 using Infrastructure.Services.Logging;
 using JetBrains.Annotations;
-using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 
@@ -19,7 +17,6 @@ namespace Infrastructure.Services.SceneLoading
         private readonly IConditionalLoggingService _conditionalLoggingService;
         private readonly ILoadingCurtainProvider _loadingCurtainProvider;
         private string _cachedSceneGUID;
-        private SceneInstance _scene;
 
         public SceneLoaderService(IConditionalLoggingService conditionalLoggingService, ILoadingCurtainProvider loadingCurtainProvider)
         {
@@ -42,7 +39,7 @@ namespace Infrastructure.Services.SceneLoading
             }
             
             await _loadingCurtainProvider.Show();
-            var waitNextScene = Addressables.LoadSceneAsync(nextScene, LoadSceneMode.Single, false);
+            AsyncOperationHandle<SceneInstance> waitNextScene = Addressables.LoadSceneAsync(nextScene, LoadSceneMode.Single, false);
             
             while (!waitNextScene.IsDone)
             {
@@ -52,9 +49,8 @@ namespace Infrastructure.Services.SceneLoading
             }
 
             _conditionalLoggingService.Log($"Loaded scene: {waitNextScene.Result.Scene.name} \n{nextScene.AssetGUID}", LogTag.SceneLoader);
-            _scene = await waitNextScene;
-            await _scene.ActivateAsync();
-            waitNextScene.Release();
+            SceneInstance scene = await waitNextScene;
+            await scene.ActivateAsync();
             onLoaded?.Invoke();
             await UniTask.WaitForSeconds(RemoteConfig.Infrastructure.FakeMinimalLoadTime);
             _loadingCurtainProvider.Hide();
