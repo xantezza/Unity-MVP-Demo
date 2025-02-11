@@ -14,7 +14,6 @@ namespace Gameplay.Factories
     [UsedImplicitly]
     public class GameplayModelsFactory : IGameplayModelsFactory
     {
-        private IInventoryModel _inventoryModel;
         private ISaveService _saveService;
         private IConditionalLoggingService _conditionalLoggingService;
 
