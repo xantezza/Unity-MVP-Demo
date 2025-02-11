@@ -25,7 +25,7 @@ namespace Infrastructure.StateMachines.GameLoopStateMachine.States
 
         public async UniTask Enter()
         {
-            _loadingCurtainProvider.Show();
+            _loadingCurtainProvider.ForceShow();
             await ToNextState();
         }
 

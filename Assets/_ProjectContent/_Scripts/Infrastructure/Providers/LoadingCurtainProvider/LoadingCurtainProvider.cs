@@ -1,4 +1,6 @@
-﻿using DG.Tweening;
+﻿using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using UnityEngine;
@@ -18,16 +20,21 @@ namespace Infrastructure.Providers.LoadingCurtainProvider
             ForceHide();
         }
 
-        public void Show(float tweenDuration = 0.3f)
+        public async UniTask Show(float tweenDuration = 0.3f)
         {
+            if (_canvas.enabled) return;
             _canvas.enabled = true;
             _tweenerCore = _canvasGroup.DOFade(1f, tweenDuration);
+            await _tweenerCore.AsyncWaitForCompletion();
+            await UniTask.CompletedTask;
         }
 
         public void ForceShow()
         {
+            if (_canvas.enabled) return;
             _tweenerCore?.Kill();
             _canvasGroup.alpha = 1f;
+            _canvas.enabled = true;
         }
 
         public void SetProgress01(float value)
@@ -37,11 +44,14 @@ namespace Infrastructure.Providers.LoadingCurtainProvider
 
         public void Hide(float tweenDuration = 0.3f)
         {
-            _canvasGroup.DOFade(0f, tweenDuration).OnComplete(ForceHide);
+            if (!_canvas.enabled) return;
+            _tweenerCore = _canvasGroup.DOFade(0f, tweenDuration);
+            _tweenerCore.OnComplete(ForceHide);
         }
 
         public void ForceHide()
         {
+            if (!_canvas.enabled) return;
             _tweenerCore?.Kill();
             _canvasGroup.alpha = 0f;
             _canvas.enabled = false;

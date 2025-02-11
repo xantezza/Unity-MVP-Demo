@@ -6,6 +6,6 @@ namespace Configs.RemoteConfig
     [Serializable]
     public class InfrastructureConfig : IConfig
     {
-        [JsonProperty] public float FakeMinimalLoadTime = 0.5f;
+        [JsonProperty] public float FakeMinimalLoadTime = 0.1f;
     }
 }

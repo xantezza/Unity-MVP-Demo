@@ -8,6 +8,7 @@ using Infrastructure.Services.Logging;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 
 namespace Infrastructure.Services.SceneLoading
@@ -15,57 +16,47 @@ namespace Infrastructure.Services.SceneLoading
     [UsedImplicitly]
     public class SceneLoaderService : ISceneLoaderService
     {
-        private readonly ICoroutineRunnerService _coroutineRunner;
         private readonly IConditionalLoggingService _conditionalLoggingService;
         private readonly ILoadingCurtainProvider _loadingCurtainProvider;
         private string _cachedSceneGUID;
+        private SceneInstance _scene;
 
-        public SceneLoaderService(ICoroutineRunnerService coroutineRunner, IConditionalLoggingService conditionalLoggingService, ILoadingCurtainProvider loadingCurtainProvider)
+        public SceneLoaderService(IConditionalLoggingService conditionalLoggingService, ILoadingCurtainProvider loadingCurtainProvider)
         {
             _loadingCurtainProvider = loadingCurtainProvider;
             _conditionalLoggingService = conditionalLoggingService;
-            _coroutineRunner = coroutineRunner;
         }
 
-        public UniTask LoadScene(AssetReference nextSceneName, Action onLoaded = null, bool allowReloadSameScene = false)
+        public async UniTask LoadScene(AssetReference nextSceneName, Action onLoaded = null, bool allowReloadSameScene = false)
         {
-            _coroutineRunner.StartCoroutine(LoadSceneByAddressablesCoroutine(nextSceneName, onLoaded, allowReloadSameScene));
-            return default;
+            await LoadSceneByAddressables(nextSceneName, onLoaded, allowReloadSameScene);
         }
 
-        private IEnumerator LoadSceneByAddressablesCoroutine(AssetReference nextScene, Action onLoaded, bool allowReloadSameScene)
+        private async UniTask LoadSceneByAddressables(AssetReference nextScene, Action onLoaded, bool allowReloadSameScene)
         {
             if (!allowReloadSameScene && _cachedSceneGUID == nextScene.AssetGUID)
             {
                 _conditionalLoggingService.Log("Scene tried to be loaded from itself, loading ignored", LogTag.SceneLoader);
                 onLoaded?.Invoke();
-                yield break;
+                return;
             }
-
-            var timePassed = 0f;
-
-            _cachedSceneGUID = nextScene.AssetGUID;
-
-            _loadingCurtainProvider.Show();
-
+            
+            await _loadingCurtainProvider.Show();
             var waitNextScene = Addressables.LoadSceneAsync(nextScene, LoadSceneMode.Single, false);
-
-            while (timePassed < RemoteConfig.Infrastructure.FakeMinimalLoadTime)
-            {
-                timePassed += Time.unscaledDeltaTime;
-                _loadingCurtainProvider.SetProgress01(waitNextScene.PercentComplete);
-                yield return null;
-            }
-
+            
             while (!waitNextScene.IsDone)
             {
-                yield return null;
+                _loadingCurtainProvider.SetProgress01(waitNextScene.PercentComplete);
+
+                await UniTask.Yield();
             }
 
-            waitNextScene.Result.ActivateAsync();
             _conditionalLoggingService.Log($"Loaded scene: {waitNextScene.Result.Scene.name} \n{nextScene.AssetGUID}", LogTag.SceneLoader);
+            _scene = await waitNextScene;
+            await _scene.ActivateAsync();
+            waitNextScene.Release();
             onLoaded?.Invoke();
-            
+            await UniTask.WaitForSeconds(RemoteConfig.Infrastructure.FakeMinimalLoadTime);
             _loadingCurtainProvider.Hide();
         }
     }
