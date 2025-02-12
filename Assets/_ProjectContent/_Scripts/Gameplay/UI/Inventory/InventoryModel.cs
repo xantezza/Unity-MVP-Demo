@@ -9,9 +9,11 @@ namespace Gameplay.UI.Inventory
     {
         private readonly InventoryItemData EmptyCell = new(InventoryItemType.None);
         private readonly IConditionalLoggingService _conditionalLoggingService;
+        private readonly int _inventorySize;
+        private readonly ISaveService _saveService;
 
         private InventoryItemData _itemBuffer;
-        
+
         public ReactiveProperty<InventoryData> Data { get; } = new();
         public SaveKey SaveKey { get; }
         public InventoryData SaveData => Data.Value;
@@ -19,29 +21,19 @@ namespace Gameplay.UI.Inventory
         public InventoryModel(int inventorySize, SaveKey saveKey, ISaveService saveService, IConditionalLoggingService conditionalLoggingService)
         {
             SaveKey = saveKey;
+            _saveService = saveService;
+            _inventorySize = inventorySize;
             _conditionalLoggingService = conditionalLoggingService;
-
-            Data.Value = saveService.Load(this) ?? new InventoryData
-            {
-                InventoryItemData = Enumerable.Repeat(EmptyCell, inventorySize).ToArray(),
-                InventorySize = inventorySize
-            };
-            saveService.AddToSaveables(this);
         }
 
-        public void SetInventorySize(int inventorySize)
+        public void Initialize()
         {
-            if (Data.Value.InventorySize != 0) return;
-
-            Data.Value.InventorySize = inventorySize;
-
-            if (Data.Value.InventoryItemData.Length == Data.Value.InventorySize)
+            Data.Value = _saveService.Load(this) ?? new InventoryData
             {
-                Data.Value = new InventoryData
-                {
-                    InventoryItemData = Enumerable.Repeat(EmptyCell, Data.Value.InventorySize).ToArray()
-                };
-            }
+                InventoryItemData = Enumerable.Repeat(EmptyCell, _inventorySize).ToArray(),
+                InventorySize = _inventorySize
+            };
+            _saveService.AddToSaveables(this);
         }
 
         public bool AddItem(InventoryItemType type)

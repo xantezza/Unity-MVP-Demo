@@ -7,14 +7,29 @@ using Zenject;
 
 namespace Gameplay.Factories
 {
-    public class GameplayPresentersFactory : IDisposable
+    public class GameplayPresentersFactory : IInitializable, IDisposable
     {
-        private readonly InventoryPresenter _playerInventoryPresenter;
+        private readonly IAssetReferenceProvider _assetReferenceProvider;
+        private readonly IGameplayModelsFactory _gameplayModelsFactory;
+        
+        private InventoryPresenter _playerInventoryPresenter;
 
         [Inject]
         public GameplayPresentersFactory(IAssetReferenceProvider assetReferenceProvider, IGameplayModelsFactory gameplayModelsFactory)
         {
-            _playerInventoryPresenter = CreateNewPlayerInventory(assetReferenceProvider, gameplayModelsFactory);
+            _gameplayModelsFactory = gameplayModelsFactory;
+            _assetReferenceProvider = assetReferenceProvider;
+        }
+
+        public void Initialize()
+        {
+            _playerInventoryPresenter = CreateNewPlayerInventory(_assetReferenceProvider, _gameplayModelsFactory);
+            _playerInventoryPresenter.Initialize();
+        }
+
+        public void Dispose()
+        {
+            _playerInventoryPresenter.Dispose();
         }
 
         private InventoryPresenter CreateNewPlayerInventory(IAssetReferenceProvider assetReferenceProvider, IGameplayModelsFactory gameplayModelsFactory)
@@ -27,11 +42,6 @@ namespace Gameplay.Factories
                     SaveKey.PlayerInventory
                 )
             );
-        }
-
-        public void Dispose()
-        {
-            _playerInventoryPresenter.Dispose();
         }
     }
 }

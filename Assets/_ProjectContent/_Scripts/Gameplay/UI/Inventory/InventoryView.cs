@@ -38,7 +38,7 @@ namespace Gameplay.UI.Inventory
             _inventoryItemIconsConfig = inventoryItemIconsConfig;
         }
 
-        private void Awake()
+        private void Start()
         {
             _pointerEventData = new PointerEventData(EventSystem.current);
             _temporalDragAndDropImageRectTransform = _dragAndDropImage.GetComponent<RectTransform>();

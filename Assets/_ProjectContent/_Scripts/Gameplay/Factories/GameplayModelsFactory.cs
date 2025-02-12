@@ -6,11 +6,6 @@ using Zenject;
 
 namespace Gameplay.Factories
 {
-    public interface IGameplayModelsFactory
-    {
-        IInventoryModel CreateNewInventoryModel(int inventorySize, SaveKey saveKey);
-    }
-
     [UsedImplicitly]
     public class GameplayModelsFactory : IGameplayModelsFactory
     {

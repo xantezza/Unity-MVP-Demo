@@ -13,16 +13,22 @@ namespace Gameplay.UI.Inventory
         private readonly IInventoryModel _inventoryModel;
         private readonly CompositeDisposable _disposables = new();
         private readonly int _inventorySize;
+        private readonly AssetReferenceGameObject _inventoryViewReference;
+        
         private InventoryView _inventoryView;
-
         private int _currentlyDraggingItemIndex = -1;
 
         public InventoryPresenter(int inventorySize, AssetReferenceGameObject inventoryViewReference, IInventoryModel inventoryModel)
         {
             _inventorySize = inventorySize;
             _inventoryModel = inventoryModel;
-
-            InstantiateView(inventoryViewReference);
+            _inventoryViewReference = inventoryViewReference;
+        }
+        
+        public void Initialize()
+        {
+            _inventoryModel.Initialize();
+            InstantiateView(_inventoryViewReference);
         }
 
         public void Dispose()

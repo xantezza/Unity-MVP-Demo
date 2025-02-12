@@ -13,7 +13,6 @@ namespace Gameplay.Installers
         {
             Container.BindInterfacesTo<GameplayModelsFactory>().FromNew().AsSingle();
             Container.BindInterfacesTo<GameplayPresentersFactory>().FromNew().AsSingle();
-            
             Container.BindInterfacesTo<InventoryItemIconsConfig>().FromInstance(_inventoryItemIconsConfig).AsSingle();
         }
     }
