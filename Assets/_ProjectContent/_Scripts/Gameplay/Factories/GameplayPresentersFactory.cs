@@ -29,7 +29,7 @@ namespace Gameplay.Factories
 
         public void Dispose()
         {
-            _playerInventoryPresenter.Dispose();
+            _playerInventoryPresenter?.Dispose();
         }
 
         private InventoryPresenter CreateNewPlayerInventory(IAssetReferenceProvider assetReferenceProvider, IGameplayModelsFactory gameplayModelsFactory)
