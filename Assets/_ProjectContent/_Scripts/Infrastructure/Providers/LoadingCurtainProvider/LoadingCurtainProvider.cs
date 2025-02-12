@@ -26,7 +26,6 @@ namespace Infrastructure.Providers.LoadingCurtainProvider
             _canvas.enabled = true;
             _tweenerCore = _canvasGroup.DOFade(1f, tweenDuration);
             await _tweenerCore.AsyncWaitForCompletion();
-            await UniTask.CompletedTask;
         }
 
         public void ForceShow()
