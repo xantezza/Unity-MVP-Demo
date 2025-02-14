@@ -25,6 +25,7 @@ namespace Gameplay.UI.Inventory
         [SerializeField] private GraphicRaycaster _graphicRaycaster;
         [SerializeField] private InventoryItemView _inventoryItemViewPrefab;
         [SerializeField] private RectTransform _inventoryItemViewContentRoot;
+        [SerializeField] private RectTransform _canvasTransform;
 
         private RectTransform _temporalDragAndDropImageRectTransform;
         private IInventoryItemIconsConfig _inventoryItemIconsConfig;
@@ -100,7 +101,7 @@ namespace Gameplay.UI.Inventory
             
             if (_dragAndDropImage.enabled)
             {
-                _temporalDragAndDropImageRectTransform.anchoredPosition = Input.mousePosition;
+                _temporalDragAndDropImageRectTransform.anchoredPosition = (Vector2)Input.mousePosition /_canvasTransform.localScale;
             }
         }
 
@@ -123,7 +124,7 @@ namespace Gameplay.UI.Inventory
                     {
                         inventoryItemView.Hide();
                         _dragAndDropImage.sprite = inventoryItemView.Sprite;
-                        _temporalDragAndDropImageRectTransform.anchoredPosition = _mousePosition;
+                        _temporalDragAndDropImageRectTransform.anchoredPosition = _mousePosition /_canvasTransform.localScale;
                         _dragAndDropImage.enabled = true;
                     }
                 }
